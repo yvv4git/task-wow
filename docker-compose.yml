@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  wow-server:
+    build:
+      context: .
+    image: "yvv4docker/task-wow-server:latest"
+    container_name: "wow-server"
+    hostname: "wow-server"
+    networks:
+      - "wow"
+    ports:
+      - "8095:8095"
+    entrypoint: ./server --hostname 0.0.0.0 --port 8095
+
+  wow-client:
+    build:
+      context: .
+    image: "yvv4docker/task-wow-client:latest"
+    container_name: "wow-client"
+    hostname: "wow-client"
+    networks:
+      - "wow"
+    depends_on:
+      - "wow-server"
+    entrypoint: ./client --hostname wow-server
+#    restart: on-failure
+
+networks:
+  wow:
+    name: "wow"
+
